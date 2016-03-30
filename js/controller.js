@@ -1,11 +1,13 @@
 var myMapApp = angular.module('myMapApp', []);
 myMapApp.controller('myMapController', function($scope){
 	
-	
+  $scope.zoomIn = [];
+	$scope.markers = [];
 	$scope.map = new google.maps.Map(document.getElementById('map'), {
           zoom: 5,
           center: new google.maps.LatLng(40.0000, -98.0000)
         });
+  var infowindow = new google.maps.InfoWindow;
 
  function createMarker(city){
 		var latLon = city.latLon.split(',');
@@ -14,26 +16,70 @@ myMapApp.controller('myMapController', function($scope){
         
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng(lat, lon),
+          lat: Number(lat),
+          lon: Number(lon),
           map: $scope.map,
-          title: city.city
+          title: city.city,
+          animation: google.maps.Animation.DROP,
         });
 
-        var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '<div>' + city.city + '</div>' +
-            '<div>' + city.state + '</div>' +
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString,
-          maxWidth: 400
-        });
+        var contentString = '<div class="city-content">'+
+        '<div class="city-info"><h2>' +city.city + '</h2></div>' +
+        '<div class="city-info">Rank: <strong>' +city.yearRank + '</strong></div>' +
+        '<div class="city-info">State: <strong>' +city.state + '</strong></div>' +
+        '<div class="city-info">Total Population: ' +city.yearEstimate + '</div>' +
+        '<div class="city-info">2010 Census: ' +city.lastCensus + '</div>' +
+        '<div class="city-info">Population Change: ' +city.change + '</div>' +
+        '<div class="city-info">Land Area: ' +city.landArea + '</div>' +
+        '<div class="city-info">Last Population: ' +city.lastPopDensity + '</div>' +
+        '<a href="#" ng-click="directionsClick($index)" class="directions-info">Get Directions</a>' +
+        '</div>';
 
         marker.addListener('click', function() {
+        infowindow.setContent(contentString);
         infowindow.open($scope.map, marker);
         });
+
+        $scope.markers.push(marker);
+       
  
  	}
+
+$scope.cityClick = function(i){
+  google.maps.event.trigger($scope.markers[i], 'click')
+}
+
+$scope.zoomClick = function(i){
+
+  $scope.map.setZoom(12);
+  $scope.map.panTo({lat: $scope.markers[i].lat, lng: $scope.markers[i].lon});
+  
+}
+
+$scope.directionsClick = function(i){
+      var directionsService = new google.maps.DirectionsService();
+      var directionsDisplay = new google.maps.DirectionsRenderer();
+      var map = new google.maps.Map(document.getElementById('map'),{
+        zoom: 7,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+      directionsDisplay.setMap(map);
+      directionsDisplay.setPanel(document.getElementById('panel-map'));
+
+         var request = {
+           origin: 'Atlanta, GA', 
+           destination:new google.maps.LatLng(lat,lon), 
+           travelMode: google.maps.DirectionsTravelMode.DRIVING
+         };
+
+         directionsService.route(request, function(response, status) {
+           if (status == google.maps.DirectionsStatus.OK) {
+             directionsDisplay.setDirections(response);
+           }
+         }); 
+
+}
+
  $scope.cities = cities;
 	for(i=0;i<cities.length; i++){
 	createMarker(cities[i]);
@@ -42,18 +88,4 @@ myMapApp.controller('myMapController', function($scope){
 
 
 
-//         var contentStringATL = '<div id="content">'+
-//             '<div id="siteNotice">'+
-//             '</div>'+
-//             '<h1 id="firstHeading" class="firstHeading">Atlanta, Georgia</h1>'+
-//             '<div id="bodyContent">'+
-//             '<p><b>Atlanta</b>, is the capital of and the most populous city in the U.S. state of Georgia ' +
-//             'with an estimated 2013 population of 447,841. Atlanta is the cultural and economic center of the Atlanta area, '+
-//             'home to 5,522,942 people and the ninth largest metropolitan area in the United States.['+
-//             'Atlanta is the county seat of Fulton County, and a small portion of the city extends eastward into DeKalb County.'+
-//             'Current Mayor:<a href="https://en.wikipedia.org/wiki/Kasim_Reed"> <b>Kasim Reed</b></a> '+
-//             '<p>Attribution: Atlanta, <a href="https://en.wikipedia.org/wiki/Atlanta">'+
-//             'https://en.wikipedia.org/wiki/Atlanta</a> '+ 
-//             '(last visited March 29, 2016).</p>'+
-//             '</div>'+
-//             '</div>';
+

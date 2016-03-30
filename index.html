@@ -4,8 +4,8 @@
 	    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 	    <meta charset="utf-8">
 	    <title>My Map App</title>
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	    <link rel="stylesheet" type="text/css" href="css/styles.css">
+	    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+	    <link rel="stylesheet" type="text/css" href="css/style.css">
 	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 	     <script
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5ySTmRWBIM_4s5BqbLi2X-du2rIV0e84">
@@ -17,9 +17,20 @@
   <body ng-controller="myMapController">
     <div id="map"></div>
    
-	<div id="button-list">
-		
+	<!-- <div id="list-window">
+		<form ng-submit="updateMarkers(searchString)">
+		<input id="filter-input" ng-model="searchString"> -->
+
+
+
+
+
+
+
+<!-- 
+		</form>
 	</div>
+ -->
 
 
 
@@ -27,13 +38,18 @@
 
 
 
-
-
-
-
-
-
-
+<div id="map-panel">
+	<ol>
+		<li ng-repeat="city in cities track by $index">
+			<div class="city-name">{{city.city}}</div>
+			<a href="" ng-click="cityClick($index)" class="blue-button">Show Info</a>
+			<a href="" ng-click="zoomClick($index)" class="blue-two-button">Zoom In</a>
+		</li>
+	</ol>
+</div>
+	
+<div id="panel-map"></div>
+	
 
 
    
