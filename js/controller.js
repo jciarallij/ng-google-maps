@@ -32,7 +32,7 @@ myMapApp.controller('myMapController', function($scope){
         '<div class="city-info">Population Change: ' +city.change + '</div>' +
         '<div class="city-info">Land Area: ' +city.landArea + '</div>' +
         '<div class="city-info">Last Population: ' +city.lastPopDensity + '</div>' +
-        '<a href="#" ng-click="directionsClick($index)" class="directions-info">Get Directions</a>' +
+        '<a href="#" onclick="directionsClick('+lat+','+lon+')" class="directions-info">Get Directions</a>' +
         '</div>';
 
         marker.addListener('click', function() {
@@ -56,7 +56,10 @@ $scope.zoomClick = function(i){
   
 }
 
-$scope.directionsClick = function(i){
+  directionsClick = function(lat, lon){
+      console.log("hello");
+      $('#map-panel').addClass("hidden");
+      $('#panel-map').addClass("view-height");
       var directionsService = new google.maps.DirectionsService();
       var directionsDisplay = new google.maps.DirectionsRenderer();
       var map = new google.maps.Map(document.getElementById('map'),{
