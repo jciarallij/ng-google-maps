@@ -1,6 +1,8 @@
 var myMapApp = angular.module('myMapApp', []);
 myMapApp.controller('myMapController', function($scope){
 	
+  $scope.placesID = placesID;
+  $scope.places = places;
   $scope.zoomIn = [];
 	$scope.markers = [];
 	$scope.map = new google.maps.Map(document.getElementById('map'), {
@@ -50,43 +52,101 @@ $scope.cityClick = function(i){
 }
 
 $scope.zoomClick = function(i){
+    var latLon = cities[i].latLon.split(',');
+      var lat = latLon[0];
+      var lon = latLon[1];
+    $scope.map.setZoom(12);
+    $scope.map.panTo({lat: $scope.markers[i].lat, lng: $scope.markers[i].lon});
+    $("#places-option").removeClass("hidden");
+    $("#places-option").addClass("view-height");
+    $("#map-panel").addClass("hidden");
+    
+    var center = new google.maps.LatLng(lat, lon);
+        $scope.map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 13
+        });
+        for(i=0; i<cities.length; i++){
+        createMarker(cities[i]);
+        } 
+        
+    } 
+        
+    $scope.makePlaces = function(){
+        var center = $scope.map.getCenter();
+        $scope.map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 13
+        });
+        for(i=0; i<cities.length; i++){
+        createMarker(cities[i]);
+        } 
 
-  $scope.map.setZoom(12);
-  $scope.map.panTo({lat: $scope.markers[i].lat, lng: $scope.markers[i].lon});
-  
-}
+        var service = new google.maps.places.PlacesService($scope.map);
+        service.nearbySearch({
+          location: center,
+          radius: 50000,
+          type: checkedPlaces
+        }, callback);
+          
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker2(results[i]);
+            
+          }
+        }
+      }
+     function createMarker2(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          position: placeLoc,
+          map: $scope.map,
+          title: place.city,
+          animation: google.maps.Animation.DROP
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(place.name);
+          infowindow.open($scope.map, this);
+        });
+      }
+  }
+    directionsClick = function(lat, lon){
+    $("#map-panel").addClass("hidden");
+    $("#panel-map").addClass("view-height");
 
-  directionsClick = function(lat, lon){
-      console.log("hello");
-      $('#map-panel').addClass("hidden");
-      $('#panel-map').addClass("view-height");
-      var directionsService = new google.maps.DirectionsService();
-      var directionsDisplay = new google.maps.DirectionsRenderer();
-      var map = new google.maps.Map(document.getElementById('map'),{
-        zoom: 7,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+    var directionsService = new google.maps.DirectionsService();
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    var map = new google.maps.Map(document.getElementById('map'),{
+          zoom: 7,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('panel-map'))
+    
+      var request = {
+        origin: "Atlanta, GA",
+        destination: new google.maps.LatLng(lat,lon),
+        travelMode: google.maps.TravelMode.DRIVING
+      };
+      directionsService.route(request, function(result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(result);
+        }
       });
-      directionsDisplay.setMap(map);
-      directionsDisplay.setPanel(document.getElementById('panel-map'));
+  }
 
-         var request = {
-           origin: 'Atlanta, GA', 
-           destination:new google.maps.LatLng(lat,lon), 
-           travelMode: google.maps.DirectionsTravelMode.DRIVING
-         };
-
-         directionsService.route(request, function(response, status) {
-           if (status == google.maps.DirectionsStatus.OK) {
-             directionsDisplay.setDirections(response);
-           }
-         }); 
-
+  $scope.cities = cities;
+  for(var i = 0; i < cities.length; i++){
+    createMarker(cities[i]);
 }
 
- $scope.cities = cities;
-	for(i=0;i<cities.length; i++){
-	createMarker(cities[i]);
-	}
+  $scope.placeChecked = function(placeSent){
+    checkedPlaces += placeSent + ", ";
+    console.log(checkedPlaces);
+    $scope.makePlaces();
+  }
+
 });
 
 

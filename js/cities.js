@@ -50,3 +50,78 @@ cities.push(new City ("36","Long Beach","California","473,577","462,257","+2.45%
 cities.push(new City ("37","Kansas City","Missouri","470,800","459,787","+2.40%","315.0 sq mi","815.7 km2","1,460 per sq mi","564 km−2","39.1252,-94.5511"));
 cities.push(new City ("38","Mesa","Arizona","464,704","439,041","+5.85%","136.5 sq mi","353.4 km2","3,218 per sq mi","1,242 km−2","33.4019,-111.7174"));
 cities.push(new City ("39","Atlanta","Georgia","456,002","420,003","+8.57%","133.2 sq mi","344.9 km2","3,154 per sq mi","1,218 km−2","33.7629,-84.4227"));
+
+var places = [];
+
+
+function Place(name){
+    this.name = name;
+}
+
+places.push(new Place("Airport"));
+places.push(new Place("Atm"));
+places.push(new Place("Bank"));
+places.push(new Place("Bar"));
+places.push(new Place("Bus station"));
+places.push(new Place("Cafe"));
+places.push(new Place("Cemetery"));
+places.push(new Place("City hall"));
+places.push(new Place("Courthouse"));
+places.push(new Place("Embassy"));
+places.push(new Place("Fire station"));
+places.push(new Place("Gas station"));
+places.push(new Place("Supermarket"));
+places.push(new Place("Hospital"));
+places.push(new Place("Library"));
+places.push(new Place("Liquor store"));
+places.push(new Place("Lodging"));
+places.push(new Place("Movie theater"));
+places.push(new Place("Museum"));
+places.push(new Place("Night club"));
+places.push(new Place("Park"));
+places.push(new Place("Parking"));
+places.push(new Place("Pharmacy"));
+places.push(new Place("Police"));
+places.push(new Place("Post office"));
+places.push(new Place("Restaurant"));
+places.push(new Place("School"));
+places.push(new Place("Subway station"));
+places.push(new Place("Train station"));
+places.push(new Place("University"));
+
+
+var placesID = [
+"airport",
+"amusement_park",
+"atm",
+"bank",
+"bar",
+"bus_station",
+"cafe",
+"cemetery",
+"church",
+"city_hall",
+"courthouse",
+"department_store",
+"embassy",
+"fire_station",
+"gas_station",
+"grocery_or_supermarket",
+"hospital",
+"library",
+"liquor_store",
+"lodging",
+"movie_theater",
+"museum",
+"night_club",
+"park",
+"parking",
+"pharmacy",
+"police",
+"post_office",
+"restaurant",
+"school",
+"subway_station",
+"srain_station",
+"university"
+];
